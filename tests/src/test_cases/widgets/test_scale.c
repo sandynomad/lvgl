@@ -656,4 +656,29 @@ void test_scale_with_1_tick(void)
     TEST_ASSERT_EQUAL_SCREENSHOT("widgets/scale_9.png");
 }
 
+static void scale_text_cb( int major_tick, char *text, int len, void *user_data ) {
+    int *tmp = (int*)user_data;
+    snprintf( text, len, "%.1f-%d", 1.0 + 0.5 * ((float)major_tick-1), *tmp );
+}
+
+void test_scale_with_text_callback(void)
+{
+    lv_obj_t * lv_obj_t_id = lv_scale_create(lv_screen_active());
+    lv_obj_set_style_height(lv_obj_t_id, lv_pct(100), LV_PART_MAIN);
+    lv_obj_set_style_width(lv_obj_t_id, lv_pct(100), LV_PART_MAIN);
+    lv_obj_set_style_align(lv_obj_t_id, LV_ALIGN_CENTER, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(lv_obj_t_id, LV_OPA_TRANSP, LV_PART_MAIN);
+    lv_obj_set_style_radius(lv_obj_t_id, LV_RADIUS_CIRCLE, 0);
+    lv_scale_set_mode(lv_obj_t_id, LV_SCALE_MODE_ROUND_INNER);
+    lv_scale_set_range(lv_obj_t_id, 0, 100);
+    lv_scale_set_angle_range(lv_obj_t_id, 180);
+    lv_scale_set_rotation(lv_obj_t_id, 270);
+    int tmp = 123;
+    lv_scale_set_text_callback(lv_obj_t_id, scale_text_cb, &tmp );
+    lv_scale_set_total_tick_count(lv_obj_t_id, 11);
+    lv_scale_set_major_tick_every(lv_obj_t_id,2);
+
+    TEST_ASSERT_EQUAL_SCREENSHOT("widgets/scale_10.png");
+}
+
 #endif

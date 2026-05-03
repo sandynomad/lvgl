@@ -399,6 +399,16 @@ void lv_scale_set_text_src(lv_obj_t * obj, const char * txt_src[])
     lv_obj_invalidate(obj);
 }
 
+void lv_scale_set_text_callback(lv_obj_t * obj, scale_text_cb_t text_cb, void *user_data ) {
+    LV_ASSERT_OBJ(obj, MY_CLASS);
+    lv_scale_t * scale = (lv_scale_t *)obj;
+
+    scale->text_cb = text_cb;
+    scale->text_cb_user_data = user_data;
+
+    lv_obj_invalidate(obj);
+}
+
 void lv_scale_set_post_draw(lv_obj_t * obj, bool en)
 {
     LV_ASSERT_OBJ(obj, MY_CLASS);
@@ -900,8 +910,14 @@ static void scale_draw_label(lv_obj_t * obj, lv_event_t * event, lv_draw_label_d
     char text_buffer[LV_SCALE_LABEL_TXT_LEN] = {0};
     lv_area_t label_coords;
 
+    if(scale->text_cb) {
+        /* request text label from users code using a callback - populating our buffer */
+        scale->text_cb( major_tick_idx, text_buffer, sizeof( text_buffer ), scale->text_cb_user_data );
+        label_dsc->text = text_buffer;
+        label_dsc->text_local = 1;
+    }
     /* Check if the custom text array has element for this major tick index */
-    if(scale->txt_src) {
+    else if(scale->txt_src) {
         scale_build_custom_label_text(obj, label_dsc, major_tick_idx);
     }
     else { /* Add label with mapped values */

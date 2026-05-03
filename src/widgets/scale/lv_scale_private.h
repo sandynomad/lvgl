@@ -66,6 +66,8 @@ struct _lv_scale_t {
     lv_ll_t section_ll;                /**< Linked list for the sections (stores lv_scale_section_t)*/
     const char ** txt_src;             /**< Optional list of text strings for major ticks
                                         *   when custom labels are provided. */
+    scale_text_cb_t text_cb;           /**< Optional user callback to generate major tick labels */
+    void *text_cb_user_data;           /**< User data for text_cb */
     lv_scale_mode_t mode;              /**< Orientation and layout of scale. */
     int32_t range_min;                 /**< Scale's minimum value */
     int32_t range_max;                 /**< Scale's maximum value */
@@ -84,7 +86,6 @@ struct _lv_scale_t {
     int32_t first_tick_width;          /**< Width of first tick in pixels */
     lv_array_t needles;                /**< Needle list of this scale */
 };
-
 
 /**********************
  * GLOBAL PROTOTYPES

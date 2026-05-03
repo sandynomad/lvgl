@@ -42,6 +42,12 @@ LV_EXPORT_CONST_INT(LV_SCALE_LABEL_ENABLED_DEFAULT);
  *      TYPEDEFS
  **********************/
 
+/*
+ * major ticks callback to generate text from the tick number
+ */
+
+typedef void (*scale_text_cb_t)( int tick, char *buffer, int len, void *user_data );
+
 /**
  * Scale mode
  */
@@ -209,6 +215,14 @@ void lv_scale_set_image_needle_value(lv_obj_t * obj, lv_obj_t * needle_img, int3
  *                  last element must be a NULL pointer.
  */
 void lv_scale_set_text_src(lv_obj_t * obj, const char * txt_src[]);
+
+/**
+ * Set callback for custom text for major tick labels.
+ * @param obj       point to Scale widget
+ * @param text_cb   users function to generate a text label from the tick number
+ * @param user_data user data to be passed to the text_cb
+ */
+void lv_scale_set_text_callback(lv_obj_t * obj, scale_text_cb_t text_cb, void *user_data );
 
 /**
  * Draw Scale after all its children are drawn.
